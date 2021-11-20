@@ -2,7 +2,7 @@ from typing import List
 
 from bs4 import BeautifulSoup
 
-from scraper.utils import get_page
+from scraper.utils import get_page, make_soup
 
 
 class Song:
@@ -42,7 +42,7 @@ class Song:
         return tag.text.strip()
     
     def scrape(self, html: str) -> None:
-        soup = BeautifulSoup(html, 'html.parser')
+        soup = make_soup(html)
 
         self.chords = self.scrape_chords(soup)
         self.title = self.scrape_title(soup)

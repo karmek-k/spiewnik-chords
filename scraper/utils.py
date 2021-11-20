@@ -1,3 +1,4 @@
+from bs4 import BeautifulSoup
 import requests
 
 
@@ -10,3 +11,7 @@ def get_page(url: str) -> str:
         raise Exception('Bad status code')
 
     return res.text
+
+
+def make_soup(html: str) -> BeautifulSoup:
+    return BeautifulSoup(html, 'html.parser')
