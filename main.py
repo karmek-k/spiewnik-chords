@@ -4,6 +4,18 @@ import bs4
 import requests
 
 
+class Song:
+    title = 'placeholder'
+
+    def __init__(self, song_url) -> None:
+       html = get_page(song_url)
+       
+       self.chords = scrape_chords(html)
+    
+    def __str__(self) -> str:
+        return f'{self.title}: {" ".join(self.chords)}'
+
+
 def get_page(url: str) -> str:
     """Fetches a page's HTML."""
 
@@ -17,7 +29,7 @@ def get_page(url: str) -> str:
 
 def scrape_chords(html: str) -> List[str]:
     """Scrapes and returns chords from the given HTML code."""
-    
+
     soup = bs4.BeautifulSoup(html, 'html.parser')
 
     chords = []
@@ -28,6 +40,5 @@ def scrape_chords(html: str) -> List[str]:
 
     return chords
 
-html = get_page('https://spiewnik.wywrota.pl/szanty/morskie-opowiesci')
-
-print(scrape_chords(html))
+song = Song('https://spiewnik.wywrota.pl/szanty/morskie-opowiesci')
+print(song)
