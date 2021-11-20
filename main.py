@@ -1,22 +1,33 @@
+from typing import List
+
 import bs4
 import requests
 
 
-url = 'https://spiewnik.wywrota.pl/szanty/morskie-opowiesci'
-res = requests.get(url)
+def get_page(url: str) -> str:
+    """Fetches a page's HTML."""
 
-status = res.status_code
+    res = requests.get(url)
 
-if status >= 400:
-    print(f'Bad status code: {status}')
-    exit(1)
+    if res.status_code >= 400:
+        raise Exception('Bad status code')
 
-soup = bs4.BeautifulSoup(res.text, 'html.parser')
+    return res.text
 
-chords = []
-for codeTag in soup.find_all('code'):
-    chord = f'{codeTag["data-chord"]}{codeTag["data-suffix"]}'
-    if codeTag['data-chord'] and chord not in chords:
-        chords.append(chord)
 
-print(chords)
+def scrape_chords(html: str) -> List[str]:
+    """Scrapes and returns chords from the given HTML code."""
+    
+    soup = bs4.BeautifulSoup(html, 'html.parser')
+
+    chords = []
+    for codeTag in soup.find_all('code'):
+        chord = f'{codeTag["data-chord"]}{codeTag["data-suffix"]}'
+        if codeTag['data-chord'] and chord not in chords:
+            chords.append(chord)
+
+    return chords
+
+html = get_page('https://spiewnik.wywrota.pl/szanty/morskie-opowiesci')
+
+print(scrape_chords(html))
