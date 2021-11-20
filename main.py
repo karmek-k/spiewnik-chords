@@ -33,9 +33,10 @@ class Song:
     def scrape_artist(soup: bs4.BeautifulSoup) -> str:
         """Scrapes and returns song's artist/author."""
 
-        title
+        tag = soup.select_one('h1')
+        tag.find('strong').extract()
 
-        return soup.select_one('h1').text
+        return tag.text.strip()
     
     def scrape(self, html: str) -> None:
         soup = bs4.BeautifulSoup(html, 'html.parser')
