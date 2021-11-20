@@ -5,15 +5,42 @@ import requests
 
 
 class Song:
-    title = 'placeholder'
-
-    def __init__(self, song_url) -> None:
-       html = get_page(song_url)
-       
-       self.chords = scrape_chords(html)
+    def __init__(self, song_url: str) -> None:
+        self.scrape(get_page(song_url))
     
     def __str__(self) -> str:
-        return f'{self.title}: {" ".join(self.chords)}'
+        return f'{self.artist} - {self.title}: {" ".join(self.chords)}'
+    
+    @staticmethod
+    def scrape_chords(soup: bs4.BeautifulSoup) -> List[str]:
+        """Scrapes and returns chords from the given HTML code."""
+        
+        chords = []
+        for codeTag in soup.find_all('code'):
+            chord = f'{codeTag["data-chord"]}{codeTag["data-suffix"]}'
+            if codeTag['data-chord'] and chord not in chords:
+                chords.append(chord)
+
+        return chords
+    
+    @staticmethod
+    def scrape_title(soup: bs4.BeautifulSoup) -> str:
+        """Scrapes and returns song's title."""
+
+        return soup.select_one('h1 strong').text
+    
+    @staticmethod
+    def scrape_artist(soup: bs4.BeautifulSoup) -> str:
+        """Scrapes and returns song's artist/author."""
+
+        return 'placeholder'
+    
+    def scrape(self, html: str) -> None:
+        soup = bs4.BeautifulSoup(html, 'html.parser')
+
+        self.chords = self.scrape_chords(soup)
+        self.title = self.scrape_title(soup)
+        self.artist = self.scrape_artist(soup)
 
 
 def get_page(url: str) -> str:
@@ -27,18 +54,4 @@ def get_page(url: str) -> str:
     return res.text
 
 
-def scrape_chords(html: str) -> List[str]:
-    """Scrapes and returns chords from the given HTML code."""
-
-    soup = bs4.BeautifulSoup(html, 'html.parser')
-
-    chords = []
-    for codeTag in soup.find_all('code'):
-        chord = f'{codeTag["data-chord"]}{codeTag["data-suffix"]}'
-        if codeTag['data-chord'] and chord not in chords:
-            chords.append(chord)
-
-    return chords
-
-song = Song('https://spiewnik.wywrota.pl/szanty/morskie-opowiesci')
-print(song)
+print(Song('https://spiewnik.wywrota.pl/szanty/morskie-opowiesci'))
