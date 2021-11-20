@@ -16,9 +16,9 @@ class Song:
         """Scrapes and returns chords from the given HTML code."""
         
         chords = []
-        for codeTag in soup.find_all('code'):
-            chord = f'{codeTag["data-chord"]}{codeTag["data-suffix"]}'
-            if codeTag['data-chord'] and chord not in chords:
+        for code_tag in soup.find_all('code'):
+            chord = f'{code_tag["data-chord"]}{code_tag["data-suffix"]}'
+            if code_tag['data-chord'] and chord not in chords:
                 chords.append(chord)
 
         return chords
@@ -33,7 +33,9 @@ class Song:
     def scrape_artist(soup: bs4.BeautifulSoup) -> str:
         """Scrapes and returns song's artist/author."""
 
-        return 'placeholder'
+        title
+
+        return soup.select_one('h1').text
     
     def scrape(self, html: str) -> None:
         soup = bs4.BeautifulSoup(html, 'html.parser')
