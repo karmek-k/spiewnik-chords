@@ -7,6 +7,8 @@ from scraper.utils import get_page
 
 class Song:
     def __init__(self, song_url: str) -> None:
+        self.url = song_url
+
         self.scrape(get_page(song_url))
     
     def __str__(self) -> str:
