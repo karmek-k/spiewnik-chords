@@ -1,4 +1,5 @@
 from typing import List
+import re
 
 from bs4 import BeautifulSoup
 
@@ -39,7 +40,8 @@ class Song:
         tag = soup.select_one('h1')
         tag.find('strong').extract()
 
-        return tag.text.strip()
+        # remove stuff in parentheses
+        return re.sub(r'\(.*\)', '', tag.text).strip()
     
     def scrape(self, html: str) -> None:
         soup = make_soup(html)
